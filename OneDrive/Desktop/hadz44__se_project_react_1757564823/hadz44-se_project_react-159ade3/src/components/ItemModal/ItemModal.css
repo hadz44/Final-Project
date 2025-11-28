@@ -1,0 +1,124 @@
+.modal__content {
+  position: relative;
+  z-index: 2;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal__content_type_image {
+  display: flex;
+  flex-direction: column;
+  height: 610px;
+  width: 498px;
+  position: relative;
+  margin: auto;
+  padding: 0;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  margin-top: 120px; /* Increase this value to lower the whole image modal container */
+}
+
+.modal__image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.modal__footer_container {
+  padding: 8px 32px;
+  height: 112px;
+  background-color: white;
+  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 16px;
+  font-weight: 700;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+.modal__footer {
+  font-family: "Cabinet Grotesk", sans-serif;
+}
+
+.modal__footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modal__delete {
+  color: #ff4d00;
+  background-color: transparent;
+  border: none;
+  font-family: "Cabinet Grotesk", sans-serif;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  padding: 0;
+  cursor: pointer;
+}
+
+.modal__delete-btn {
+  position: static;
+  transform: none;
+  margin: 0;
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+  .modal__content {
+    padding: 10px;
+  }
+  
+  .modal__content_type_image {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 20px);
+  }
+  
+  .modal__image {
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
+  }
+  
+  .modal__footer_container {
+    padding: 8px 16px;
+    height: auto;
+    min-height: 80px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modal__content {
+    padding: 5px;
+  }
+  
+  .modal__content_type_image {
+    border-radius: 10px;
+    max-height: calc(100vh - 10px);
+  }
+  
+  .modal__image {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    max-height: 40vh;
+  }
+  
+  .modal__footer_container {
+    padding: 8px 12px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  
+  .modal__delete {
+    font-size: 14px;
+  }
+}

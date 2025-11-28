@@ -1,0 +1,110 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 0;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.5s, opacity 0.5s linear;
+  font-family: "Cabinet Grotesk", sans-serif;
+  z-index: 1;
+  cursor: auto;
+}
+
+.modal_opened {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.modal__close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: red;
+  border: 2px solid blue;
+  padding: 5px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+}
+
+.modal__close:hover {
+  opacity: 0.6;
+}
+
+.modal__close img {
+  width: 20px;
+  height: 20px;
+  /* Removed temporary border */
+}
+
+.modal__container {
+  background-color: #fff;
+  padding: 20px;  
+  border-radius: 20px;
+  position: relative;
+  box-sizing: border-box;
+  width: 496px;
+  height: 436px;
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  top: 193px;
+  margin-top: 0;
+}
+
+.delete-modal .modal__container {
+  margin-top: 400px; /* Make the Delete modal container much lower */
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+  .modal {
+    padding-top: 12vh;
+  }
+  .modal__container {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 20px);
+    padding: 16px;
+  }
+  
+  .modal__close {
+    top: 16px;
+    right: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .modal {
+    padding-top: 8vh;
+  }
+  .modal__container {
+    border-radius: 10px;
+    max-height: calc(100vh - 10px);
+    padding: 12px;
+  }
+  
+  .modal__close {
+    top: 12px;
+    right: 12px;
+    width: 25px;
+    height: 25px;
+  }
+  
+  .modal__close img {
+    width: 16px;
+    height: 16px;
+  }
+} 

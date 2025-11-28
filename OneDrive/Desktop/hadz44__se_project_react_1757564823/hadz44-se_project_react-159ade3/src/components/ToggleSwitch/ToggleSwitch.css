@@ -1,0 +1,120 @@
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 56px;
+  height: 28px;
+}
+
+.toggle-switch__input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch__slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.toggle-switch__slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-switch__input:checked + .toggle-switch__slider {
+  background-color: #000;
+}
+
+.toggle-switch__input:checked + .toggle-switch__slider:before {
+  transform: translateX(28px);
+}
+
+.toggle-switch__text {
+  position: absolute;
+  color: rgba(0, 0, 0, 0.5);
+  top: 4px;
+  font-family: "Cabinet Grotesk", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  transition: color 0.4s;
+}
+
+.toggle-switch__text_F {
+  left: 9px;
+}
+
+.toggle-switch__text_C {
+  right: 9px;
+}
+
+.toggle-switch__text_active {
+  color: white;
+}
+
+.switch {
+    width: 56px;
+    height: 28px;
+    border: 2px solid #7e7e7e;
+    border-radius: 20px;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    margin-left: auto;
+  }
+  
+  .switch__checkbox {
+    opacity: 0;
+  }
+  
+  .switch__circle {
+    background-color: black;
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    border-radius: 50%;
+    left: 0;
+    transition: all 0.6s;
+  }
+  .switch__text {
+    position: absolute;
+    color: rgb(0,0,0,0.5);
+    top: 4px;
+    font-family: "Cabinet Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .switch__text_F {
+    left: 9px;
+  }
+  
+  .switch__text_C {
+    right: 9px;
+  }
+  
+  .switch__checkbox:checked ~ .switch__circle {
+    left: 28px;
+  }
+  
+  .switch__checkbox:not(:checked) ~ .switch__text_F {
+    color: white;
+  }
+  
+  .switch__checkbox:checked ~ .switch__text_C {
+    color: white;
+  }
+  

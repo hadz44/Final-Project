@@ -1,0 +1,85 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  font-family: "Cabinet Grotesk", sans-serif;
+}
+
+.header__left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.header__logo {
+  margin-right: 24px;
+  width: 89px;
+  height: 40px;
+}
+
+.header__date-and-location {
+  margin: 0;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__button {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 20px;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.header__avatar-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: black;
+}
+
+.header__avatar {
+  width: 40px;
+  height: 40px;
+  left: 1320px;
+  border-width: 1px;
+}
+
+.header__username {
+  margin: 0;
+  font-weight: 700;
+}
+
+.header__avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.header__link {
+  text-decoration: none;
+  color: inherit;
+}

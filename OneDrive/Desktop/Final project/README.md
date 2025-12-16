@@ -92,13 +92,21 @@ To use real APIs:
 VITE_API_URL=http://localhost:3000
 VITE_STOCK_API_URL=https://your-stock-api.com
 VITE_STOCK_API_KEY=your_api_key_here
+VITE_NEWS_API_KEY=your_news_api_key_here
 ```
 
-2. Set `USE_MOCK_DATA = false` in `utils/api.js`
+2. **News API Setup:**
+   - Register at [News API](https://newsapi.org) to get your API key
+   - Add `VITE_NEWS_API_KEY` to your `.env` file
+   - The app will automatically use the proxy URL in production
 
-3. Update API endpoints in `utils/StockMarketApi.js` to match your chosen provider
+3. Set `USE_MOCK_DATA = false` in `utils/api.js` (if using real backend)
+
+4. Update API endpoints in `utils/StockMarketApi.js` to match your chosen provider
 
 See `utils/API_SETUP.md` for detailed API setup instructions.
+
+**Note:** News API free tier only works on localhost. For production, the app automatically uses the proxy URL: `https://nomoreparties.co/news/v2/everything`
 
 ## Deployment
 

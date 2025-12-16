@@ -8,12 +8,13 @@ import Watchlist from '../Watchlist/Watchlist'
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
 import { authApi, stockApi } from '../../utils/api.js'
 import { getToken, saveToken, saveUserName, clearAuth } from '../../utils/auth.js'
+import { searchNews } from '../../utils/NewsApi.js'
 
 function App() {
   const [isLoading, setIsLoading] = useState(false)
-  const [stockData, setStockData] = useState(null)
-  const [stockResults, setStockResults] = useState([]) // Array of stock results
-  const [error, setError] = useState(null)
+  const [newsArticles, setNewsArticles] = useState([]) // Array of news articles
+  const [searchError, setSearchError] = useState(null) // Search form validation error
+  const [apiError, setApiError] = useState(null) // API request error
   const [savedStocks, setSavedStocks] = useState([])
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userName, setUserName] = useState('')
@@ -107,92 +108,62 @@ function App() {
     clearAuth()
     setIsAuthenticated(false)
     setUserName('')
-    setStockData(null)
+    setNewsArticles([])
+    setSearchError(null)
+    setApiError(null)
     setSavedStocks([])
   }
 
-  const handleSearch = async (symbol) => {
+  const handleSearch = async (keyword, validationError) => {
     if (!isAuthenticated) {
       setIsLoginModalOpen(true)
       return
     }
 
+    // Handle validation error from SearchForm
+    if (validationError) {
+      setSearchError(validationError)
+      setApiError(null)
+      setNewsArticles([])
+      return
+    }
+
+    // Clear previous errors
+    setSearchError(null)
+    setApiError(null)
+    setNewsArticles([])
     setIsLoading(true)
-    setError(null)
-    setStockData(null)
-    setStockResults([])
-    const token = getToken()
 
     try {
-      // Fetch stock data and chart data
-      const [stockInfo, chartData] = await Promise.all([
-        stockApi.searchStock(symbol, token),
-        stockApi.getStockChartData(symbol, '1d', token),
-      ])
+      // Fetch news articles from News API
+      const response = await searchNews(keyword)
 
-      // Check if we got valid data
-      if (!stockInfo || (!stockInfo.price && !stockInfo.close && !stockInfo.currentPrice)) {
-        setStockResults([])
-        setError(null)
-        return
+      // Check if we got articles
+      if (!response.articles || response.articles.length === 0) {
+        setNewsArticles([])
+        setApiError(null)
+      } else {
+        setNewsArticles(response.articles)
       }
-
-      // Transform API response to match component expectations
-      const transformedData = {
-        symbol: symbol.toUpperCase(),
-        price: stockInfo.price || stockInfo.close || stockInfo.currentPrice,
-        change: stockInfo.change || stockInfo.changeAmount || 0,
-        changePercent: stockInfo.changePercent || stockInfo.changePercentage || 0,
-        chartData: Array.isArray(chartData) ? chartData : formatChartData(stockInfo.historicalData),
-      }
-
-      // For single stock search, set both stockData and stockResults
-      setStockData(transformedData)
-      setStockResults([transformedData])
     } catch (error) {
-      console.error('Stock search error:', error)
-      setError(
-        'Sorry, something went wrong during the request. There may be a connection issue or the server may be down. Please try again later.'
-      )
-      setStockData(null)
-      setStockResults([])
+      console.error('News search error:', error)
+      
+      // Check if it's a validation error or API error
+      if (error.message === 'Please enter a keyword') {
+        setSearchError(error.message)
+      } else {
+        setApiError(
+          'Sorry, something went wrong during the request. There may be a connection issue or the server may be down. Please try again later.'
+        )
+      }
+      setNewsArticles([])
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Helper function to format chart data
-  function formatChartData(data) {
-    if (!data || !Array.isArray(data)) return null
-    return data.map((point) => ({
-      time: new Date(point.timestamp || point.time).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      price: parseFloat(point.price || point.close || point.value),
-      timestamp: new Date(point.timestamp || point.time).getTime(),
-    }))
-  }
-
-  // Helper function to generate sample chart data
-  function generateSampleChartData(basePrice, change) {
-    const chartData = []
-    const now = new Date()
-    for (let i = 24; i >= 0; i--) {
-      const time = new Date(now.getTime() - i * 60 * 60 * 1000)
-      const variation = (Math.random() - 0.5) * basePrice * 0.1
-      const price = basePrice + variation + (i / 24) * change
-
-      chartData.push({
-        time: time.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        price: parseFloat(price.toFixed(2)),
-        timestamp: time.getTime(),
-      })
-    }
-    return chartData
+  const handleClearSearchError = () => {
+    setSearchError(null)
   }
 
   return (
@@ -211,10 +182,11 @@ function App() {
             element={
               <Main
                 isLoading={isLoading}
-                stockData={stockData}
-                stockResults={stockResults}
-                error={error}
+                newsArticles={newsArticles}
+                searchError={searchError}
+                apiError={apiError}
                 onSearch={handleSearch}
+                onClearSearchError={handleClearSearchError}
                 isAuthenticated={isAuthenticated}
                 isLoginModalOpen={isLoginModalOpen}
                 isRegisterModalOpen={isRegisterModalOpen}

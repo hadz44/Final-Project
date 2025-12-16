@@ -1,26 +1,52 @@
 import './SearchForm.css'
 import { useState } from 'react'
 
-function SearchForm({ onSearch }) {
+function SearchForm({ onSearch, error, onErrorClear }) {
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (onSearch && searchTerm.trim()) {
-      onSearch(searchTerm.trim().toUpperCase())
+    
+    // Clear previous errors
+    if (onErrorClear) {
+      onErrorClear()
+    }
+
+    // Validate input
+    if (!searchTerm.trim()) {
+      if (onSearch) {
+        onSearch('', 'Please enter a keyword')
+      }
+      return
+    }
+
+    // Call onSearch with the keyword
+    if (onSearch) {
+      onSearch(searchTerm.trim())
+    }
+  }
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value)
+    // Clear error when user starts typing
+    if (onErrorClear) {
+      onErrorClear()
     }
   }
 
   return (
     <form className="search-form" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="search-form__input"
-        placeholder="Enter stock symbol (e.g., AAPL, TSLA, MSFT)"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        required
-      />
+      <div className="search-form__container">
+        <input
+          type="text"
+          className={`search-form__input ${error ? 'search-form__input_error' : ''}`}
+          placeholder="Enter topic"
+          value={searchTerm}
+          onChange={handleChange}
+          required
+        />
+        {error && <span className="search-form__error">{error}</span>}
+      </div>
       <button type="submit" className="search-form__button">
         Search
       </button>

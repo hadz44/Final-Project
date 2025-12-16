@@ -3,6 +3,7 @@ export const API_CONFIG = {
   BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   STOCK_API_KEY: import.meta.env.VITE_STOCK_API_KEY || '',
   STOCK_API_URL: import.meta.env.VITE_STOCK_API_URL || 'https://api.example.com',
+  NEWS_API_KEY: import.meta.env.VITE_NEWS_API_KEY || '',
 }
 
 // Error messages

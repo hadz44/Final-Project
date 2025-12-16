@@ -1,7 +1,7 @@
 import './Main.css'
 import { useState, useEffect } from 'react'
 import SearchForm from '../SearchForm/SearchForm'
-import StockGraph from '../StockGraph/StockGraph'
+import NewsCard from '../NewsCard/NewsCard'
 import About from '../About/About'
 import Preloader from '../Preloader/Preloader'
 import LoginModal from '../LoginModal/LoginModal'
@@ -9,10 +9,11 @@ import RegisterModal from '../RegisterModal/RegisterModal'
 
 function Main({
   isLoading,
-  stockData,
-  stockResults,
-  error,
+  newsArticles,
+  searchError,
+  apiError,
   onSearch,
+  onClearSearchError,
   isAuthenticated,
   isLoginModalOpen,
   isRegisterModalOpen,
@@ -24,19 +25,19 @@ function Main({
 }) {
   const [displayedCount, setDisplayedCount] = useState(3)
 
-  // Reset displayed count when stockResults change
+  // Reset displayed count when newsArticles change
   useEffect(() => {
     setDisplayedCount(3)
-  }, [stockResults])
+  }, [newsArticles])
 
   // Handle "Show more" button click
   const handleShowMore = () => {
     setDisplayedCount((prev) => prev + 3)
   }
 
-  // Get displayed results (3 at a time)
-  const displayedResults = stockResults.slice(0, displayedCount)
-  const hasMore = stockResults.length > displayedCount
+  // Get displayed articles (3 at a time)
+  const displayedArticles = newsArticles.slice(0, displayedCount)
+  const hasMore = newsArticles.length > displayedCount
 
   if (!isAuthenticated) {
     return (
@@ -87,31 +88,30 @@ function Main({
       <section className="main__search-section">
         <h1 className="main__title">Stock Market Analyzer</h1>
         <p className="main__subtitle">
-          Search for any stock symbol to view real-time graphs and market data
+          Enter a keyword to search for news articles
         </p>
-        <SearchForm onSearch={onSearch} />
+        <SearchForm
+          onSearch={onSearch}
+          error={searchError}
+          onErrorClear={onClearSearchError}
+        />
       </section>
 
       {isLoading ? (
         <Preloader text="Searching for news..." />
-      ) : error ? (
+      ) : apiError ? (
         <section className="main__error-section">
-          <p className="main__error-message">{error}</p>
+          <p className="main__error-message">{apiError}</p>
         </section>
-      ) : stockResults.length === 0 && !stockData ? (
+      ) : newsArticles.length === 0 && !isLoading ? (
         <section className="main__no-results-section">
           <p className="main__no-results-message">Nothing found</p>
         </section>
       ) : (
         <section className="main__results-section">
           <div className="main__results-grid">
-            {displayedResults.map((stock, index) => (
-              <StockGraph
-                key={stock.symbol || index}
-                symbol={stock.symbol}
-                data={stock}
-                isLoading={false}
-              />
+            {displayedArticles.map((article, index) => (
+              <NewsCard key={article.url || index} card={article} />
             ))}
           </div>
           {hasMore && (

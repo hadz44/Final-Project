@@ -15,6 +15,9 @@ function Main({
   onSearch,
   onClearSearchError,
   isAuthenticated,
+  savedArticles,
+  onSaveArticle,
+  onDeleteArticle,
   isLoginModalOpen,
   isRegisterModalOpen,
   onLoginClick,
@@ -110,9 +113,27 @@ function Main({
       ) : (
         <section className="main__results-section">
           <div className="main__results-grid">
-            {displayedArticles.map((article, index) => (
-              <NewsCard key={article.url || index} card={article} />
-            ))}
+            {displayedArticles.map((article, index) => {
+              // Check if article is saved by comparing URL
+              const savedArticle = savedArticles.find(
+                (saved) => (saved.url || saved.link) === article.url
+              )
+              const isSaved = !!savedArticle
+              
+              return (
+                <NewsCard
+                  key={article.url || index}
+                  card={{
+                    ...article,
+                    _id: savedArticle?._id, // Add saved article ID if it exists
+                  }}
+                  isAuthenticated={isAuthenticated}
+                  isSaved={isSaved}
+                  onSave={onSaveArticle}
+                  onDelete={onDeleteArticle}
+                />
+              )
+            })}
           </div>
           {hasMore && (
             <div className="main__show-more-container">

@@ -275,6 +275,79 @@ export function removeMockSavedStock(stockId) {
   }
 }
 
+// Mock saved articles
+let mockSavedArticles = []
+
+// Get saved articles
+export function getMockSavedArticles() {
+  return [...mockSavedArticles]
+}
+
+// Add article to saved articles
+export function addMockSavedArticle(articleData) {
+  // Validate required fields
+  if (!articleData || !articleData.url) {
+    throw new Error('Article URL is required')
+  }
+
+  // Check if article already exists in saved articles
+  const existingArticle = mockSavedArticles.find(
+    (article) => article.url === articleData.url
+  )
+  
+  if (existingArticle) {
+    throw new Error('Article already saved')
+  }
+
+  // Create new article entry matching backend response format
+  const newArticle = {
+    _id: Date.now().toString(),
+    keyword: articleData.keyword || '',
+    title: articleData.title || '',
+    text: articleData.text || articleData.description || '',
+    date: articleData.date || new Date().toISOString(),
+    source: articleData.source || articleData.source?.name || '',
+    link: articleData.link || articleData.url || '',
+    image: articleData.image || articleData.urlToImage || '',
+    url: articleData.url,
+    urlToImage: articleData.urlToImage,
+    publishedAt: articleData.publishedAt,
+  }
+
+  mockSavedArticles.push(newArticle)
+  
+  // Return response matching backend format
+  return {
+    data: newArticle,
+    message: 'Article saved successfully',
+  }
+}
+
+// Remove article from saved articles
+export function removeMockSavedArticle(articleId) {
+  if (!articleId) {
+    throw new Error('Article ID is required')
+  }
+
+  const index = mockSavedArticles.findIndex((article) => article._id === articleId)
+  
+  if (index === -1) {
+    throw new Error('Article not found')
+  }
+
+  const deletedArticle = mockSavedArticles[index]
+  mockSavedArticles.splice(index, 1)
+  
+  // Return response matching backend format
+  return {
+    message: 'Article deleted successfully',
+    data: {
+      _id: deletedArticle._id,
+      url: deletedArticle.url,
+    },
+  }
+}
+
 // Mock user data
 export const mockUsers = {
   test: {

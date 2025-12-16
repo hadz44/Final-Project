@@ -6,6 +6,9 @@ import {
   removeMockSavedStock,
   getMockAuthResponse,
   getMockCurrentUser,
+  getMockSavedArticles,
+  addMockSavedArticle,
+  removeMockSavedArticle,
 } from './mockData.js'
 import {
   getStockQuote,
@@ -255,6 +258,25 @@ export const stockApi = {
     return handleResponse(response)
   },
 
+  // Get saved articles
+  async getSavedArticles(token) {
+    if (USE_MOCK_DATA) {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      return getMockSavedArticles()
+    }
+
+    const response = await fetch(`${API_BASE_URL}/articles`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    return handleResponse(response)
+  },
+
   // Delete stock from watchlist
   async deleteStock(stockId, token) {
     if (USE_MOCK_DATA) {
@@ -264,6 +286,50 @@ export const stockApi = {
     }
 
     const response = await fetch(`${API_BASE_URL}/articles/${stockId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    return handleResponse(response)
+  },
+
+  // Save article to saved articles
+  async saveArticle(articleData, token) {
+    if (USE_MOCK_DATA) {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      try {
+        const result = addMockSavedArticle(articleData)
+        return result.data || result
+      } catch (error) {
+        throw new Error(error.message || 'Failed to save article')
+      }
+    }
+
+    const response = await fetch(`${API_BASE_URL}/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(articleData),
+    })
+
+    return handleResponse(response)
+  },
+
+  // Delete article from saved articles
+  async deleteArticle(articleId, token) {
+    if (USE_MOCK_DATA) {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      return removeMockSavedArticle(articleId)
+    }
+
+    const response = await fetch(`${API_BASE_URL}/articles/${articleId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

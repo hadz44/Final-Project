@@ -16,6 +16,7 @@ function App() {
   const [searchError, setSearchError] = useState(null) // Search form validation error
   const [apiError, setApiError] = useState(null) // API request error
   const [savedStocks, setSavedStocks] = useState([])
+  const [savedArticles, setSavedArticles] = useState([]) // Array of saved article IDs
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userName, setUserName] = useState('')
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
@@ -35,6 +36,7 @@ function App() {
             setUserName(name)
             // Load saved stocks
             loadSavedStocks(token)
+            loadSavedArticles(token)
           } else {
             clearAuth()
           }
@@ -56,6 +58,49 @@ function App() {
     }
   }
 
+  // Load saved articles from API
+  const loadSavedArticles = async (token) => {
+    try {
+      const articles = await stockApi.getSavedArticles(token)
+      // Store full articles to check if article is saved and get IDs
+      setSavedArticles(articles || [])
+    } catch (error) {
+      console.error('Error loading saved articles:', error)
+      setSavedArticles([])
+    }
+  }
+
+  // Handle saving an article
+  const handleSaveArticle = async (articleData) => {
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    const token = getToken()
+    try {
+      await stockApi.saveArticle(articleData, token)
+      // Reload saved articles to update state
+      await loadSavedArticles(token)
+    } catch (error) {
+      console.error('Error saving article:', error)
+      alert(error.message || 'Failed to save article. Please try again.')
+    }
+  }
+
+  // Handle deleting an article
+  const handleDeleteArticle = async (articleId) => {
+    const token = getToken()
+    try {
+      await stockApi.deleteArticle(articleId, token)
+      // Reload saved articles to update state
+      await loadSavedArticles(token)
+    } catch (error) {
+      console.error('Error deleting article:', error)
+      alert('Failed to delete article. Please try again.')
+    }
+  }
+
   const handleLogin = async ({ email, password }) => {
     try {
       const response = await authApi.login({ email, password })
@@ -69,8 +114,9 @@ function App() {
         setUserName(name)
         setIsLoginModalOpen(false)
         
-        // Load saved stocks after login
+        // Load saved stocks and articles after login
         loadSavedStocks(response.token)
+        loadSavedArticles(response.token)
       } else {
         throw new Error('No token received from server')
       }
@@ -93,8 +139,9 @@ function App() {
         setUserName(userName)
         setIsRegisterModalOpen(false)
         
-        // Load saved stocks after registration
+        // Load saved stocks and articles after registration
         loadSavedStocks(response.token)
+        loadSavedArticles(response.token)
       } else {
         throw new Error('No token received from server')
       }
@@ -112,6 +159,7 @@ function App() {
     setSearchError(null)
     setApiError(null)
     setSavedStocks([])
+    setSavedArticles([])
   }
 
   const handleSearch = async (keyword, validationError) => {
@@ -188,6 +236,9 @@ function App() {
                 onSearch={handleSearch}
                 onClearSearchError={handleClearSearchError}
                 isAuthenticated={isAuthenticated}
+                savedArticles={savedArticles}
+                onSaveArticle={handleSaveArticle}
+                onDeleteArticle={handleDeleteArticle}
                 isLoginModalOpen={isLoginModalOpen}
                 isRegisterModalOpen={isRegisterModalOpen}
                 onLoginClick={() => setIsLoginModalOpen(true)}

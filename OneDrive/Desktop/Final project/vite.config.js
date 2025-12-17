@@ -9,8 +9,8 @@ export default defineConfig({
     port: 5173,
     open: true, // Automatically open browser
   },
-  // Base path for deployment (uncomment and set for GitHub Pages)
-  // base: '/your-repo-name/',
+  // Base path for deployment (GitHub Pages)
+  base: '/Final-Project/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

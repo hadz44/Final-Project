@@ -1,13 +1,12 @@
-# Stock Market Analyzer
+# News Explorer
 
-A modern React application for analyzing stock market data with interactive charts, watchlist management, and user authentication.
+A modern React application for searching and saving news articles with user authentication and responsive design.
 
 ## Features
 
 - 🔐 **User Authentication**: Sign up and sign in functionality
-- 📊 **Stock Search**: Search for stocks by symbol and view real-time data
-- 📈 **Interactive Charts**: Visualize stock price movements using Recharts
-- ⭐ **Watchlist**: Save and manage favorite stocks
+- 🔎 **News Search**: Search for news articles by keyword
+- ⭐ **Saved Articles**: Save and manage favorite news
 - 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
 - 🎨 **Modern UI**: Clean and intuitive user interface
 
@@ -16,7 +15,7 @@ A modern React application for analyzing stock market data with interactive char
 - **React** - UI library
 - **Vite** - Build tool and dev server
 - **React Router** - Client-side routing
-- **Recharts** - Chart visualization library
+- **News API** - Third-party news data
 - **Vanilla JavaScript** - API interactions
 
 ## Getting Started
@@ -61,14 +60,14 @@ final-project/
 │   ├── Header/         # Site header
 │   ├── Navigation/     # Navigation menu
 │   ├── Main/           # Main page content
-│   ├── StockGraph/     # Stock chart component
-│   ├── Watchlist/      # Watchlist page
+│   ├── NewsCard/       # News article card
+│   ├── SavedNews/      # Saved articles page
 │   ├── LoginModal/     # Login modal
 │   ├── RegisterModal/  # Registration modal
 │   └── ...
 ├── utils/              # Utility functions
 │   ├── api.js          # Backend API calls
-│   ├── StockMarketApi.js  # Third-party stock API
+│   ├── NewsApi.js      # Third-party news API
 │   ├── mockData.js     # Mock data for development
 │   └── ...
 ├── src/                # Source files
@@ -79,32 +78,17 @@ final-project/
 
 ## API Configuration
 
-### Mock Data Mode (Default)
-
-The application uses mock data by default for development and testing. No API keys are required.
-
-### Real API Setup
-
-To use real APIs:
+### News API Setup
 
 1. Create a `.env` file in the project root:
 ```env
 VITE_API_URL=http://localhost:3000
-VITE_STOCK_API_URL=https://your-stock-api.com
-VITE_STOCK_API_KEY=your_api_key_here
 VITE_NEWS_API_KEY=your_news_api_key_here
 ```
 
-2. **News API Setup:**
-   - Register at [News API](https://newsapi.org) to get your API key
-   - Add `VITE_NEWS_API_KEY` to your `.env` file
-   - The app will automatically use the proxy URL in production
-
-3. Set `USE_MOCK_DATA = false` in `utils/api.js` (if using real backend)
-
-4. Update API endpoints in `utils/StockMarketApi.js` to match your chosen provider
-
-See `utils/API_SETUP.md` for detailed API setup instructions.
+2. Register at [News API](https://newsapi.org) to get your API key.
+3. Add `VITE_NEWS_API_KEY` to your `.env` file.
+4. The app will automatically use the proxy URL in production.
 
 **Note:** News API free tier only works on localhost. For production, the app automatically uses the proxy URL: `https://nomoreparties.co/news/v2/everything`
 
@@ -173,19 +157,16 @@ vercel --prod
 ## Usage
 
 1. **Sign Up/Login**: Create an account or sign in to access the application
-2. **Search Stocks**: Enter a stock symbol (e.g., AAPL, TSLA, MSFT) to view data
-3. **View Charts**: See interactive price charts with Recharts
-4. **Save to Watchlist**: Add stocks to your watchlist for easy access
-5. **Manage Watchlist**: View and remove stocks from your watchlist
+2. **Search News**: Enter a keyword (e.g., climate, AI, markets) to search articles
+3. **Save Articles**: Save articles to your personal list
+4. **Manage Saved News**: View and remove saved articles
 
 ## Mock Data
 
-The application includes comprehensive mock data for:
+The application includes mock data for:
 - User authentication (test@example.com, demo@example.com)
-- Stock data (AAPL, TSLA, MSFT, GOOGL, AMZN, META, NVDA, NFLX)
-- Pre-populated watchlist items
-
-See `utils/MOCK_BACKEND_GUIDE.md` for details on mock backend responses.
+- News article results
+- Saved articles
 
 ## Browser Support
 
@@ -204,7 +185,11 @@ This project is part of a course submission.
 
 ## Acknowledgments
 
-- Recharts for chart visualization
+- News API for article data
 - React Router for routing
 - Vite for build tooling
+
+
+Video link for Project Pitch on Loom:
+https://www.loom.com/share/ed12ffb3383344d2b45287a6832adcda
 

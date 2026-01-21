@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Market Analyzer</title>
+    <script>
+      ;(() => {
+        const params = new URLSearchParams(window.location.search)
+        const redirectPath = params.get('p')
+        if (!redirectPath) return
+
+        const base = '%BASE_URL%'
+        const normalizedBase = base.endsWith('/') ? base.slice(0, -1) : base
+        const target = `${normalizedBase}${redirectPath}`
+
+        window.history.replaceState(null, '', target)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

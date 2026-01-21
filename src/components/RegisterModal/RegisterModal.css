@@ -1,0 +1,49 @@
+.modal__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #2f71e5;
+  font-weight: 400;
+}
+
+.modal__input {
+  padding: 0.75rem;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 0.875rem;
+  color: #000;
+  background-color: transparent;
+  transition: border-color 0.2s;
+}
+
+.modal__input:focus {
+  outline: none;
+  border-bottom-color: #2f71e5;
+}
+
+.modal__input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.modal__switch {
+  text-align: center;
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.modal__switch-link {
+  background: none;
+  border: none;
+  color: #2f71e5;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.875rem;
+  padding: 0;
+}
+
+.modal__switch-link:hover {
+  opacity: 0.7;
+}
+

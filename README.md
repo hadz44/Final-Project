@@ -2,6 +2,10 @@
 
 A modern React application for analyzing stock market data with interactive charts, watchlist management, and user authentication.
 
+## Pitch Video
+
+🔗 **Loom Video**: https://www.loom.com/share/ed12ffb3383344d2b45287a6832adcda
+
 ## Features
 
 - 🔐 **User Authentication**: Sign up and sign in functionality

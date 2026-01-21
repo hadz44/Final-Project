@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting...</title>
+    <script>
+      ;(() => {
+        const base = '/Final-Project'
+        const { pathname, search, hash } = window.location
+        const relativePath = pathname.startsWith(base)
+          ? pathname.slice(base.length)
+          : pathname
+        const target = `${base}/?p=${encodeURIComponent(
+          `${relativePath}${search}${hash}`
+        )}`
+        window.location.replace(target)
+      })()
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -60,25 +60,26 @@ npm run dev
 
 ```
 final-project/
-├── components/          # React components
-│   ├── App/            # Root component
-│   ├── Header/         # Site header
-│   ├── Navigation/     # Navigation menu
-│   ├── Main/           # Main page content
-│   ├── StockGraph/     # Stock chart component
-│   ├── Watchlist/      # Watchlist page
-│   ├── LoginModal/     # Login modal
-│   ├── RegisterModal/  # Registration modal
-│   └── ...
-├── utils/              # Utility functions
-│   ├── api.js          # Backend API calls
-│   ├── StockMarketApi.js  # Third-party stock API
-│   ├── mockData.js     # Mock data for development
-│   └── ...
+├── public/             # Static assets
 ├── src/                # Source files
+│   ├── components/     # React components
+│   │   ├── App/        # Root component
+│   │   ├── Header/     # Site header
+│   │   ├── Navigation/ # Navigation menu
+│   │   ├── Main/       # Main page content
+│   │   ├── StockGraph/ # Stock chart component
+│   │   ├── Watchlist/  # Watchlist page
+│   │   ├── LoginModal/ # Login modal
+│   │   ├── RegisterModal/
+│   │   └── ...
+│   ├── utils/          # Utility functions
+│   │   ├── api.js      # Backend API calls
+│   │   ├── StockMarketApi.js
+│   │   ├── mockData.js # Mock data for development
+│   │   └── ...
 │   ├── main.jsx        # Entry point
 │   └── style.css       # Global styles
-└── public/             # Static assets
+└── vite.config.js
 ```
 
 ## API Configuration
@@ -111,6 +112,18 @@ VITE_NEWS_API_KEY=your_news_api_key_here
 See `utils/API_SETUP.md` for detailed API setup instructions.
 
 **Note:** News API free tier only works on localhost. For production, the app automatically uses the proxy URL: `https://nomoreparties.co/news/v2/everything`
+
+### Live Stock Data (Finnhub)
+
+If you want real-time stock quotes and charts, use Finnhub:
+
+1. Sign up for an API key at [Finnhub](https://finnhub.io)
+2. Add these variables to `.env`:
+```env
+VITE_STOCK_API_KEY=your_finnhub_key
+VITE_STOCK_API_URL=https://finnhub.io/api/v1
+```
+3. Restart the dev server (`npm run dev`)
 
 ## Deployment
 

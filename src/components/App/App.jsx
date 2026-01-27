@@ -16,6 +16,9 @@ function App() {
   const [newsArticles, setNewsArticles] = useState([]) // Array of news articles
   const [searchError, setSearchError] = useState(null) // Search form validation error
   const [apiError, setApiError] = useState(null) // API request error
+  const [stockData, setStockData] = useState(null)
+  const [isStockLoading, setIsStockLoading] = useState(false)
+  const [stockError, setStockError] = useState(null)
   const [savedStocks, setSavedStocks] = useState([])
   const [savedArticles, setSavedArticles] = useState([]) // Array of saved article IDs
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -188,6 +191,8 @@ function App() {
     setNewsArticles([])
     setSearchError(null)
     setApiError(null)
+    setStockData(null)
+    setStockError(null)
     setSavedStocks([])
     setSavedArticles([])
   }
@@ -244,6 +249,92 @@ function App() {
     setSearchError(null)
   }
 
+  const handleStockSearch = async (symbol) => {
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    if (!symbol || !symbol.trim()) {
+      setStockError('Please enter a stock symbol')
+      setStockData(null)
+      return
+    }
+
+    setIsStockLoading(true)
+    setStockError(null)
+    const token = getToken()
+
+    try {
+      const [stockInfo, chartData] = await Promise.all([
+        stockApi.searchStock(symbol.trim(), token),
+        stockApi.getStockChartData(symbol.trim(), '1d', token),
+      ])
+
+      if (!stockInfo) {
+        setStockData(null)
+        setStockError('Nothing found')
+        return
+      }
+
+      setStockData({
+        symbol: symbol.trim().toUpperCase(),
+        price: stockInfo.price || stockInfo.close || stockInfo.currentPrice,
+        change: stockInfo.change || stockInfo.changeAmount || 0,
+        changePercent: stockInfo.changePercent || stockInfo.changePercentage || 0,
+        chartData: Array.isArray(chartData) ? chartData : [],
+      })
+    } catch (error) {
+      console.error('Stock search error:', error)
+      setStockError(
+        'Sorry, something went wrong during the request. There may be a connection issue or the server may be down. Please try again later.'
+      )
+      setStockData(null)
+    } finally {
+      setIsStockLoading(false)
+    }
+  }
+
+  const handleSaveStock = async (stock) => {
+    if (!isAuthenticated) {
+      setIsLoginModalOpen(true)
+      return
+    }
+
+    const token = getToken()
+    try {
+      await stockApi.saveStock(
+        {
+          symbol: stock.symbol,
+          data: stock,
+          keyword: stock.symbol,
+          title: `${stock.symbol} Stock Analysis`,
+          text: `Stock information for ${stock.symbol}`,
+          source: 'Stock Market API',
+          link: `https://example.com/stock/${stock.symbol}`,
+          image: '',
+        },
+        token
+      )
+      await loadSavedStocks(token)
+    } catch (error) {
+      console.error('Error saving stock:', error)
+      alert(error.message || 'Failed to save stock. Please try again.')
+    }
+  }
+
+  const handleRemoveStock = async (stockId) => {
+    if (!stockId) return
+    const token = getToken()
+    try {
+      await stockApi.deleteStock(stockId, token)
+      await loadSavedStocks(token)
+    } catch (error) {
+      console.error('Error removing stock:', error)
+      alert('Failed to remove stock. Please try again.')
+    }
+  }
+
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="app">
@@ -269,6 +360,13 @@ function App() {
                 savedArticles={savedArticles}
                 onSaveArticle={handleSaveArticle}
                 onDeleteArticle={handleDeleteArticle}
+                stockData={stockData}
+                isStockLoading={isStockLoading}
+                stockError={stockError}
+                onSearchStock={handleStockSearch}
+                onSaveStock={handleSaveStock}
+                onRemoveStock={handleRemoveStock}
+                savedStocks={savedStocks}
                 isLoginModalOpen={isLoginModalOpen}
                 isRegisterModalOpen={isRegisterModalOpen}
                 onLoginClick={() => setIsLoginModalOpen(true)}

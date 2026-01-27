@@ -144,13 +144,17 @@ export async function searchNews(keyword) {
   const fromDate = formatDate(sevenDaysAgo)
   const toDate = formatDate(today)
 
-  // Build query parameters
+  // Build query parameters (focus on financial/business news)
+  const financeQuery = `${keyword.trim()} AND (stock OR market OR finance OR economy OR business)`
   const params = new URLSearchParams({
-    q: keyword.trim(),
+    q: financeQuery,
     apiKey: NEWS_API_KEY,
     from: fromDate,
     to: toDate,
     pageSize: '100',
+    language: 'en',
+    sortBy: 'publishedAt',
+    searchIn: 'title,description',
   })
 
   const url = `${newsApiBaseUrl}?${params.toString()}`

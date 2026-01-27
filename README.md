@@ -1,6 +1,6 @@
-# Stock Market Analyzer
+# Market & News Explorer
 
-A modern React application for analyzing stock market data with interactive charts, watchlist management, and user authentication.
+A modern React application for analyzing stock market data and searching financial news with user authentication and responsive design.
 
 ## Pitch Video
 
@@ -10,8 +10,9 @@ A modern React application for analyzing stock market data with interactive char
 
 - 🔐 **User Authentication**: Sign up and sign in functionality
 - 📊 **Stock Search**: Search for stocks by symbol and view real-time data
-- 📈 **Interactive Charts**: Visualize stock price movements using Recharts
-- ⭐ **Watchlist**: Save and manage favorite stocks
+- 📈 **Interactive Charts**: Visualize stock price movements with live quotes
+- 📰 **Financial News Search**: Search news filtered for business/markets
+- ⭐ **Saved News & Watchlist**: Save articles and stocks
 - 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
 - 🎨 **Modern UI**: Clean and intuitive user interface
 
@@ -183,17 +184,16 @@ vercel --prod
 
 ### Live Demo
 
-🔗 **Deployed Site**: [Add your deployment URL here after deployment]
-
-**Note**: Update this section with your actual deployment URL once the site is live.
+🔗 **Deployed Site**: https://hadz44.github.io/Final-Project/
 
 ## Usage
 
 1. **Sign Up/Login**: Create an account or sign in to access the application
 2. **Search Stocks**: Enter a stock symbol (e.g., AAPL, TSLA, MSFT) to view data
-3. **View Charts**: See interactive price charts with Recharts
+3. **Search News**: Enter a keyword to find financial news
 4. **Save to Watchlist**: Add stocks to your watchlist for easy access
-5. **Manage Watchlist**: View and remove stocks from your watchlist
+5. **Save Articles**: Save articles to your personal list
+6. **Manage Saved Items**: View and remove saved stocks and articles
 
 ## Mock Data
 

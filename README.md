@@ -1,6 +1,6 @@
-# Stock Market Analyzer
+# Market & News Explorer
 
-A modern React application for analyzing stock market data with interactive charts, watchlist management, and user authentication.
+A modern React application for analyzing stock market data and searching financial news with user authentication and responsive design.
 
 ## Pitch Video
 
@@ -10,8 +10,9 @@ A modern React application for analyzing stock market data with interactive char
 
 - 🔐 **User Authentication**: Sign up and sign in functionality
 - 📊 **Stock Search**: Search for stocks by symbol and view real-time data
-- 📈 **Interactive Charts**: Visualize stock price movements using Recharts
-- ⭐ **Watchlist**: Save and manage favorite stocks
+- 📈 **Interactive Charts**: Visualize stock price movements with live quotes
+- 📰 **Financial News Search**: Search news filtered for business/markets
+- ⭐ **Saved News & Watchlist**: Save articles and stocks
 - 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
 - 🎨 **Modern UI**: Clean and intuitive user interface
 
@@ -60,25 +61,26 @@ npm run dev
 
 ```
 final-project/
-├── components/          # React components
-│   ├── App/            # Root component
-│   ├── Header/         # Site header
-│   ├── Navigation/     # Navigation menu
-│   ├── Main/           # Main page content
-│   ├── StockGraph/     # Stock chart component
-│   ├── Watchlist/      # Watchlist page
-│   ├── LoginModal/     # Login modal
-│   ├── RegisterModal/  # Registration modal
-│   └── ...
-├── utils/              # Utility functions
-│   ├── api.js          # Backend API calls
-│   ├── StockMarketApi.js  # Third-party stock API
-│   ├── mockData.js     # Mock data for development
-│   └── ...
+├── public/             # Static assets
 ├── src/                # Source files
+│   ├── components/     # React components
+│   │   ├── App/        # Root component
+│   │   ├── Header/     # Site header
+│   │   ├── Navigation/ # Navigation menu
+│   │   ├── Main/       # Main page content
+│   │   ├── StockGraph/ # Stock chart component
+│   │   ├── Watchlist/  # Watchlist page
+│   │   ├── LoginModal/ # Login modal
+│   │   ├── RegisterModal/
+│   │   └── ...
+│   ├── utils/          # Utility functions
+│   │   ├── api.js      # Backend API calls
+│   │   ├── StockMarketApi.js
+│   │   ├── mockData.js # Mock data for development
+│   │   └── ...
 │   ├── main.jsx        # Entry point
 │   └── style.css       # Global styles
-└── public/             # Static assets
+└── vite.config.js
 ```
 
 ## API Configuration
@@ -111,6 +113,18 @@ VITE_NEWS_API_KEY=your_news_api_key_here
 See `utils/API_SETUP.md` for detailed API setup instructions.
 
 **Note:** News API free tier only works on localhost. For production, the app automatically uses the proxy URL: `https://nomoreparties.co/news/v2/everything`
+
+### Live Stock Data (Finnhub)
+
+If you want real-time stock quotes and charts, use Finnhub:
+
+1. Sign up for an API key at [Finnhub](https://finnhub.io)
+2. Add these variables to `.env`:
+```env
+VITE_STOCK_API_KEY=your_finnhub_key
+VITE_STOCK_API_URL=https://finnhub.io/api/v1
+```
+3. Restart the dev server (`npm run dev`)
 
 ## Deployment
 
@@ -170,17 +184,16 @@ vercel --prod
 
 ### Live Demo
 
-🔗 **Deployed Site**: [Add your deployment URL here after deployment]
-
-**Note**: Update this section with your actual deployment URL once the site is live.
+🔗 **Deployed Site**: https://hadz44.github.io/Final-Project/
 
 ## Usage
 
 1. **Sign Up/Login**: Create an account or sign in to access the application
 2. **Search Stocks**: Enter a stock symbol (e.g., AAPL, TSLA, MSFT) to view data
-3. **View Charts**: See interactive price charts with Recharts
+3. **Search News**: Enter a keyword to find financial news
 4. **Save to Watchlist**: Add stocks to your watchlist for easy access
-5. **Manage Watchlist**: View and remove stocks from your watchlist
+5. **Save Articles**: Save articles to your personal list
+6. **Manage Saved Items**: View and remove saved stocks and articles
 
 ## Mock Data
 

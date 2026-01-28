@@ -143,6 +143,102 @@
   opacity: 0.7;
 }
 
+.main__stock-section {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+.main__stock-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1b22;
+}
+
+.main__stock-form {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.main__stock-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.main__stock-input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.main__stock-input_error {
+  border-color: #d32f2f;
+}
+
+.main__stock-error {
+  color: #d32f2f;
+  font-size: 0.875rem;
+  padding-left: 0.25rem;
+}
+
+.main__stock-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 100px;
+  background-color: #2f71e5;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.main__stock-button:hover {
+  background-color: #1f5fd4;
+}
+
+.main__stock-result {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.main__save-stock-button {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #1a1b22;
+  border-radius: 100px;
+  background-color: #fff;
+  color: #1a1b22;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.main__save-stock-button:hover {
+  background-color: #1a1b22;
+  color: #fff;
+}
+
+.main__save-stock-button_saved {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+  color: #fff;
+}
+
+.main__save-stock-button_saved:hover {
+  background-color: #e04345;
+  color: #fff;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .main__search-section {
@@ -180,6 +276,14 @@
     width: 100%;
     padding: 0.875rem 1.5rem;
     font-size: 1rem;
+  }
+
+  .main__stock-form {
+    flex-direction: column;
+  }
+
+  .main__stock-button {
+    width: 100%;
   }
 }
 
@@ -242,6 +346,18 @@
   .main__show-more-button {
     font-size: 0.875rem;
     padding: 0.75rem 1.25rem;
+  }
+
+  .main__stock-section {
+    padding: 1rem;
+  }
+
+  .main__stock-title {
+    font-size: 1.25rem;
+  }
+
+  .main__save-stock-button {
+    width: 100%;
   }
 }
 

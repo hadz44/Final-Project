@@ -29,6 +29,8 @@ function NewsCard({ card, isAuthenticated, isSaved, onSave, onDelete, index = 0 
       return
     }
 
+    const sourceName = card.source?.name || card.sourceName || card.source || 'Unknown source'
+
     if (isSaved) {
       // Delete article
       if (onDelete && card._id) {
@@ -42,7 +44,7 @@ function NewsCard({ card, isAuthenticated, isSaved, onSave, onDelete, index = 0 
           title: card.title,
           text: card.description || card.content || '',
           date: card.publishedAt || new Date().toISOString(),
-          source: card.source?.name || '',
+          source: sourceName,
           link: card.url,
           image: card.urlToImage || '',
           url: card.url,
@@ -102,10 +104,14 @@ function NewsCard({ card, isAuthenticated, isSaved, onSave, onDelete, index = 0 
       <div className="news-card__content">
         <div className="news-card__header">
           <p className="news-card__date">{formatDate(card.publishedAt)}</p>
-          <p className="news-card__source">{card.source?.name || 'Unknown source'}</p>
+          <p className="news-card__source">
+            {card.source?.name || card.sourceName || card.source || 'Unknown source'}
+          </p>
         </div>
         <h3 className="news-card__title">{card.title || 'No title'}</h3>
-        <p className="news-card__text">{card.description || card.content || ''}</p>
+        <p className="news-card__text">
+          {card.description || card.text || card.content || ''}
+        </p>
         {card.url && (
           <a
             href={card.url}

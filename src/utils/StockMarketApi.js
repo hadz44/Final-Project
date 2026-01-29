@@ -4,7 +4,7 @@
 
 import { API_CONFIG } from './constants.js'
 
-// Get API key from environment variables
+// Finnhub API configuration
 const STOCK_API_KEY = API_CONFIG.STOCK_API_KEY
 const STOCK_API_BASE_URL = API_CONFIG.STOCK_API_URL
 
@@ -30,12 +30,8 @@ async function handleApiResponse(response) {
  */
 export async function getStockQuote(symbol) {
   try {
-    // Example API endpoint structure - adjust based on your chosen API
-    // Alpha Vantage example: `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${STOCK_API_KEY}`
-    // IEX Cloud example: `https://cloud.iexapis.com/stable/stock/${symbol}/quote?token=${STOCK_API_KEY}`
-    // Finnhub example: `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${STOCK_API_KEY}`
-    
-    const url = `${STOCK_API_BASE_URL}/quote?symbol=${symbol}&apikey=${STOCK_API_KEY}`
+    const upperSymbol = symbol.trim().toUpperCase()
+    const url = `${STOCK_API_BASE_URL}/quote?symbol=${upperSymbol}&token=${STOCK_API_KEY}`
     
     const response = await fetch(url, {
       method: 'GET',
@@ -45,20 +41,19 @@ export async function getStockQuote(symbol) {
     })
 
     const data = await handleApiResponse(response)
-    
-    // Transform API response to standardized format
-    // Adjust this based on your API's response structure
+
+    // Finnhub quote response: { c, d, dp, h, l, o, pc, t }
     return {
-      symbol: data.symbol || symbol.toUpperCase(),
-      price: data.price || data['05. price'] || data.c || data.currentPrice,
-      change: data.change || data['09. change'] || data.d || data.changeAmount,
-      changePercent: data.changePercent || data['10. change percent'] || data.dp || data.changePercentage,
-      high: data.high || data['03. high'] || data.h || data.highPrice,
-      low: data.low || data['04. low'] || data.l || data.lowPrice,
-      open: data.open || data['02. open'] || data.o || data.openPrice,
-      close: data.close || data['08. previous close'] || data.pc || data.previousClose,
-      volume: data.volume || data['06. volume'] || data.v || data.volume,
-      timestamp: data.timestamp || data.t || Date.now(),
+      symbol: upperSymbol,
+      price: data.c,
+      change: data.d,
+      changePercent: data.dp,
+      high: data.h,
+      low: data.l,
+      open: data.o,
+      close: data.pc,
+      volume: data.v,
+      timestamp: data.t ? data.t * 1000 : Date.now(),
     }
   } catch (error) {
     console.error('Error fetching stock quote:', error)
@@ -74,12 +69,34 @@ export async function getStockQuote(symbol) {
  */
 export async function getStockChartData(symbol, timeframe = '1d') {
   try {
-    // Example API endpoint structure - adjust based on your chosen API
-    // Alpha Vantage example: `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${STOCK_API_KEY}`
-    // IEX Cloud example: `https://cloud.iexapis.com/stable/stock/${symbol}/chart/${timeframe}?token=${STOCK_API_KEY}`
-    // Finnhub example: `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=60&from=${from}&to=${to}&token=${STOCK_API_KEY}`
-    
-    const url = `${STOCK_API_BASE_URL}/chart?symbol=${symbol}&timeframe=${timeframe}&apikey=${STOCK_API_KEY}`
+    const upperSymbol = symbol.trim().toUpperCase()
+    const now = Math.floor(Date.now() / 1000)
+    let resolution = '60'
+    let from = now - 60 * 60 * 24
+
+    switch (timeframe) {
+      case '1w':
+        resolution = '60'
+        from = now - 60 * 60 * 24 * 7
+        break
+      case '1m':
+        resolution = 'D'
+        from = now - 60 * 60 * 24 * 30
+        break
+      case '3m':
+        resolution = 'D'
+        from = now - 60 * 60 * 24 * 90
+        break
+      case '1y':
+        resolution = 'W'
+        from = now - 60 * 60 * 24 * 365
+        break
+      default:
+        resolution = '60'
+        from = now - 60 * 60 * 24
+    }
+
+    const url = `${STOCK_API_BASE_URL}/stock/candle?symbol=${upperSymbol}&resolution=${resolution}&from=${from}&to=${now}&token=${STOCK_API_KEY}`
     
     const response = await fetch(url, {
       method: 'GET',
@@ -89,54 +106,19 @@ export async function getStockChartData(symbol, timeframe = '1d') {
     })
 
     const data = await handleApiResponse(response)
-    
-    // Transform API response to standardized format for Recharts
-    // Adjust this based on your API's response structure
-    const chartData = []
-    
-    // Handle different API response formats
-    if (Array.isArray(data)) {
-      // If API returns array directly
-      data.forEach((point) => {
-        chartData.push({
-          time: new Date(point.timestamp || point.time || point.date).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-          price: parseFloat(point.price || point.close || point.c || point.value),
-          timestamp: new Date(point.timestamp || point.time || point.date).getTime(),
-        })
-      })
-    } else if (data['Time Series (60min)'] || data['Time Series (Daily)']) {
-      // Alpha Vantage format
-      const timeSeries = data['Time Series (60min)'] || data['Time Series (Daily)']
-      Object.keys(timeSeries).forEach((key) => {
-        const point = timeSeries[key]
-        chartData.push({
-          time: new Date(key).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-          price: parseFloat(point['4. close'] || point.close),
-          timestamp: new Date(key).getTime(),
-        })
-      })
-      chartData.sort((a, b) => a.timestamp - b.timestamp)
-    } else if (data.c) {
-      // Finnhub format
-      data.t.forEach((timestamp, index) => {
-        chartData.push({
-          time: new Date(timestamp * 1000).toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-          price: parseFloat(data.c[index]),
-          timestamp: timestamp * 1000,
-        })
-      })
+
+    if (data.s !== 'ok') {
+      return []
     }
-    
-    return chartData
+
+    return data.t.map((timestamp, index) => ({
+      time: new Date(timestamp * 1000).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      price: parseFloat(data.c[index]),
+      timestamp: timestamp * 1000,
+    }))
   } catch (error) {
     console.error('Error fetching stock chart data:', error)
     throw error
@@ -150,11 +132,7 @@ export async function getStockChartData(symbol, timeframe = '1d') {
  */
 export async function searchStocks(query) {
   try {
-    // Example API endpoint structure
-    // Alpha Vantage example: `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${STOCK_API_KEY}`
-    // IEX Cloud example: `https://cloud.iexapis.com/stable/search/${query}?token=${STOCK_API_KEY}`
-    
-    const url = `${STOCK_API_BASE_URL}/search?query=${encodeURIComponent(query)}&apikey=${STOCK_API_KEY}`
+    const url = `${STOCK_API_BASE_URL}/search?q=${encodeURIComponent(query)}&token=${STOCK_API_KEY}`
     
     const response = await fetch(url, {
       method: 'GET',
@@ -164,27 +142,15 @@ export async function searchStocks(query) {
     })
 
     const data = await handleApiResponse(response)
-    
-    // Transform API response to standardized format
-    // Adjust this based on your API's response structure
-    if (Array.isArray(data)) {
-      return data.map((stock) => ({
-        symbol: stock.symbol || stock['1. symbol'],
-        name: stock.name || stock['2. name'],
-        type: stock.type || stock['3. type'],
-        region: stock.region || stock['4. region'],
-      }))
-    } else if (data.bestMatches) {
-      // Alpha Vantage format
-      return data.bestMatches.map((stock) => ({
-        symbol: stock['1. symbol'],
-        name: stock['2. name'],
-        type: stock['3. type'],
-        region: stock['4. region'],
-      }))
-    }
-    
-    return []
+
+    if (!data?.result) return []
+
+    return data.result.map((stock) => ({
+      symbol: stock.symbol,
+      name: stock.description,
+      type: stock.type,
+      region: stock.primaryExchange,
+    }))
   } catch (error) {
     console.error('Error searching stocks:', error)
     throw error
@@ -198,11 +164,8 @@ export async function searchStocks(query) {
  */
 export async function getCompanyProfile(symbol) {
   try {
-    // Example API endpoint structure
-    // Alpha Vantage example: `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${symbol}&apikey=${STOCK_API_KEY}`
-    // IEX Cloud example: `https://cloud.iexapis.com/stable/stock/${symbol}/company?token=${STOCK_API_KEY}`
-    
-    const url = `${STOCK_API_BASE_URL}/company?symbol=${symbol}&apikey=${STOCK_API_KEY}`
+    const upperSymbol = symbol.trim().toUpperCase()
+    const url = `${STOCK_API_BASE_URL}/stock/profile2?symbol=${upperSymbol}&token=${STOCK_API_KEY}`
     
     const response = await fetch(url, {
       method: 'GET',
@@ -212,15 +175,15 @@ export async function getCompanyProfile(symbol) {
     })
 
     const data = await handleApiResponse(response)
-    
+
     return {
-      symbol: data.Symbol || data.symbol,
-      name: data.Name || data.companyName,
-      description: data.Description || data.description,
-      sector: data.Sector || data.sector,
-      industry: data.Industry || data.industry,
-      marketCap: data.MarketCapitalization || data.marketCap,
-      website: data.Website || data.website,
+      symbol: data.ticker || upperSymbol,
+      name: data.name,
+      description: data.description,
+      sector: data.finnhubIndustry,
+      industry: data.finnhubIndustry,
+      marketCap: data.marketCapitalization,
+      website: data.weburl,
     }
   } catch (error) {
     console.error('Error fetching company profile:', error)
@@ -235,7 +198,8 @@ export async function getCompanyProfile(symbol) {
  */
 export async function getRealTimePrice(symbol) {
   try {
-    const url = `${STOCK_API_BASE_URL}/realtime?symbol=${symbol}&apikey=${STOCK_API_KEY}`
+    const upperSymbol = symbol.trim().toUpperCase()
+    const url = `${STOCK_API_BASE_URL}/quote?symbol=${upperSymbol}&token=${STOCK_API_KEY}`
     
     const response = await fetch(url, {
       method: 'GET',
@@ -245,11 +209,11 @@ export async function getRealTimePrice(symbol) {
     })
 
     const data = await handleApiResponse(response)
-    
+
     return {
-      symbol: data.symbol || symbol.toUpperCase(),
-      price: data.price || data.lastPrice,
-      timestamp: data.timestamp || Date.now(),
+      symbol: upperSymbol,
+      price: data.c,
+      timestamp: data.t ? data.t * 1000 : Date.now(),
     }
   } catch (error) {
     console.error('Error fetching real-time price:', error)

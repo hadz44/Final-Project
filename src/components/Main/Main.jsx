@@ -109,6 +109,57 @@ function Main({
         />
       </section>
 
+      {isLoading ? (
+        <Preloader text="Searching for news..." />
+      ) : apiError ? (
+        <section className="main__error-section">
+          <p className="main__error-message">{apiError}</p>
+        </section>
+      ) : newsArticles.length === 0 && !isLoading ? (
+        <section className="main__no-results-section">
+          <p className="main__no-results-message">Nothing found</p>
+        </section>
+      ) : (
+        <section className="main__results-section">
+          <ul className="main__results-list">
+            {displayedArticles.map((article, index) => {
+              // Check if article is saved by comparing URL
+              const savedArticle = savedArticles.find(
+                (saved) => (saved.url || saved.link) === article.url
+              )
+              const isSaved = !!savedArticle
+
+              return (
+                <li className="main__results-item" key={article.url || index}>
+                  <NewsCard
+                    index={index}
+                    card={{
+                      ...article,
+                      _id: savedArticle?._id, // Add saved article ID if it exists
+                    }}
+                    isAuthenticated={isAuthenticated}
+                    isSaved={isSaved}
+                    onSave={onSaveArticle}
+                    onDelete={onDeleteArticle}
+                  />
+                </li>
+              )
+            })}
+          </ul>
+          {hasMore && (
+            <div className="main__show-more-container">
+              <button
+                type="button"
+                className="main__show-more-button"
+                onClick={handleShowMore}
+              >
+                Show more
+              </button>
+            </div>
+          )}
+        </section>
+      )}
+
       <section className="main__stock-section">
         <h2 className="main__stock-title">Search for a stock</h2>
         <form
@@ -174,56 +225,6 @@ function Main({
           </div>
         ) : null}
       </section>
-
-      {isLoading ? (
-        <Preloader text="Searching for news..." />
-      ) : apiError ? (
-        <section className="main__error-section">
-          <p className="main__error-message">{apiError}</p>
-        </section>
-      ) : newsArticles.length === 0 && !isLoading ? (
-        <section className="main__no-results-section">
-          <p className="main__no-results-message">Nothing found</p>
-        </section>
-      ) : (
-        <section className="main__results-section">
-          <div className="main__results-grid">
-            {displayedArticles.map((article, index) => {
-              // Check if article is saved by comparing URL
-              const savedArticle = savedArticles.find(
-                (saved) => (saved.url || saved.link) === article.url
-              )
-              const isSaved = !!savedArticle
-              
-              return (
-                <NewsCard
-                  key={article.url || index}
-                  index={index}
-                  card={{
-                    ...article,
-                    _id: savedArticle?._id, // Add saved article ID if it exists
-                  }}
-                  isAuthenticated={isAuthenticated}
-                  isSaved={isSaved}
-                  onSave={onSaveArticle}
-                  onDelete={onDeleteArticle}
-                />
-              )
-            })}
-          </div>
-          {hasMore && (
-            <div className="main__show-more-container">
-              <button
-                type="button"
-                className="main__show-more-button"
-                onClick={handleShowMore}
-              >
-                Show more
-              </button>
-            </div>
-          )}
-        </section>
-      )}
 
       <About />
     </main>

@@ -11,18 +11,19 @@ function SavedNews({ savedArticles, onDeleteArticle }) {
             <p className="saved-news__count">
               {savedArticles.length} saved articles
             </p>
-            <div className="saved-news__grid">
+            <ul className="saved-news__list">
               {savedArticles.map((article, index) => (
-                <NewsCard
-                  key={article._id || article.url}
-                  index={index}
-                  card={article}
-                  isAuthenticated
-                  isSaved
-                  onDelete={onDeleteArticle}
-                />
+                <li className="saved-news__item" key={article._id || article.url}>
+                  <NewsCard
+                    index={index}
+                    card={article}
+                    isAuthenticated
+                    isSaved
+                    onDelete={onDeleteArticle}
+                  />
+                </li>
               ))}
-            </div>
+            </ul>
           </>
         ) : (
           <div className="saved-news__empty">

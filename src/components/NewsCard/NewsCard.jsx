@@ -60,8 +60,27 @@ function NewsCard({ card, isAuthenticated, isSaved, onSave, onDelete, index = 0 
     card.image ||
     FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]
 
+  const handleCardClick = () => {
+    if (card.url) {
+      window.open(card.url, '_blank', 'noopener,noreferrer')
+    }
+  }
+
+  const handleCardKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleCardClick()
+    }
+  }
+
   return (
-    <article className="news-card">
+    <article
+      className="news-card"
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      role="link"
+      tabIndex={0}
+    >
       <div className="news-card__image-container">
         <img
           src={imageSrc}
@@ -118,6 +137,7 @@ function NewsCard({ card, isAuthenticated, isSaved, onSave, onDelete, index = 0 
             target="_blank"
             rel="noopener noreferrer"
             className="news-card__link"
+            onClick={(e) => e.stopPropagation()}
           >
             Read more
           </a>

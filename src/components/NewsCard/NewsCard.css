@@ -13,6 +13,11 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.news-card:focus {
+  outline: 2px solid #2f71e5;
+  outline-offset: 2px;
+}
+
 .news-card__image-container {
   position: relative;
   width: 100%;
@@ -117,6 +122,7 @@
   font-weight: 600;
   margin-bottom: 0.75rem;
   line-height: 1.4;
+  color: #1a1b22;
 }
 
 .news-card__text {

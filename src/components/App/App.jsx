@@ -386,16 +386,7 @@ function App() {
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <Watchlist
                   savedStocks={savedStocks}
-                  onDeleteStock={async (stockId) => {
-                    const token = getToken()
-                    try {
-                      await stockApi.deleteStock(stockId, token)
-                      loadSavedStocks(token)
-                    } catch (error) {
-                      console.error('Error deleting stock:', error)
-                      alert('Failed to delete stock. Please try again.')
-                    }
-                  }}
+                  onRemoveStock={handleRemoveStock}
                 />
               </ProtectedRoute>
             }

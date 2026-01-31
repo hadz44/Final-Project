@@ -104,6 +104,15 @@
   cursor: not-allowed;
 }
 
+.modal__input_error {
+  border-bottom-color: #d32f2f;
+}
+
+.modal__error {
+  color: #d32f2f;
+  font-size: 0.75rem;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
   .modal__container {

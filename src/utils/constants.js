@@ -2,7 +2,7 @@
 export const API_CONFIG = {
   BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   STOCK_API_KEY: import.meta.env.VITE_STOCK_API_KEY || '',
-  STOCK_API_URL: import.meta.env.VITE_STOCK_API_URL || 'https://api.example.com',
+  STOCK_API_URL: import.meta.env.VITE_STOCK_API_URL || 'https://finnhub.io/api/v1',
   NEWS_API_KEY: import.meta.env.VITE_NEWS_API_KEY || '',
 }
 

@@ -1,7 +1,7 @@
 import './Watchlist.css'
 import StockGraph from '../StockGraph/StockGraph'
 
-function Watchlist({ savedStocks }) {
+function Watchlist({ savedStocks, onRemoveStock }) {
   return (
     <main className="watchlist">
       <div className="watchlist__container">
@@ -13,12 +13,20 @@ function Watchlist({ savedStocks }) {
             </p>
             <div className="watchlist__stocks">
               {savedStocks.map((stock, index) => (
-                <StockGraph
-                  key={index}
-                  symbol={stock.symbol}
-                  data={stock.data}
-                  isLoading={false}
-                />
+                <div className="watchlist__stock-card" key={stock._id || index}>
+                  <StockGraph
+                    symbol={stock.symbol}
+                    data={stock.data}
+                    isLoading={false}
+                  />
+                  <button
+                    type="button"
+                    className="watchlist__remove-button"
+                    onClick={() => onRemoveStock && onRemoveStock(stock._id)}
+                  >
+                    Remove
+                  </button>
+                </div>
               ))}
             </div>
           </>

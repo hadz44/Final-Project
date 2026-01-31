@@ -21,8 +21,11 @@ const API_BASE_URL = API_CONFIG.BASE_URL
 const STOCK_API_KEY = API_CONFIG.STOCK_API_KEY
 const STOCK_API_URL = API_CONFIG.STOCK_API_URL
 
-// Flag to use mock data (set to false when real API is ready)
-const USE_MOCK_DATA = true
+// Use real stock data when API key is provided; otherwise fall back to mock data
+const USE_MOCK_DATA = !STOCK_API_KEY
+
+// Use mock auth when backend is not configured
+const USE_MOCK_AUTH = !API_BASE_URL || API_BASE_URL.includes('localhost')
 
 // Helper function to handle API responses
 async function handleResponse(response) {
@@ -39,7 +42,7 @@ async function handleResponse(response) {
 export const authApi = {
   // Register a new user
   async register({ email, password, name }) {
-    if (USE_MOCK_DATA) {
+    if (USE_MOCK_AUTH) {
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 500))
       return getMockAuthResponse(email, password, name)
@@ -58,7 +61,7 @@ export const authApi = {
 
   // Login user
   async login({ email, password }) {
-    if (USE_MOCK_DATA) {
+    if (USE_MOCK_AUTH) {
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 500))
       return getMockAuthResponse(email, password)
@@ -77,7 +80,7 @@ export const authApi = {
 
   // Get current user info
   async getCurrentUser(token) {
-    if (USE_MOCK_DATA) {
+    if (USE_MOCK_AUTH) {
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 300))
       return getMockCurrentUser(token)
@@ -96,7 +99,7 @@ export const authApi = {
 
   // Check if token is valid
   async checkToken(token) {
-    if (USE_MOCK_DATA) {
+    if (USE_MOCK_AUTH) {
       // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 200))
       // Simulate token validation - check if token exists and is valid format

@@ -1,4 +1,5 @@
 import './About.css'
+import authorImage from '../../assets/author.png'
 
 function About() {
   return (
@@ -6,18 +7,23 @@ function About() {
       <div className="about__content">
         <div className="about__image-container">
           <img
-            src="#"
-            alt="Author"
+            src={authorImage}
+            alt="Author portrait"
             className="about__image"
+            loading="lazy"
           />
         </div>
         <div className="about__text">
           <h2 className="about__title">About the author</h2>
           <p className="about__description">
-            This website is a stock market analyzer that allows you to search for stocks and view their price movements.My name is Hadi Frifer and I am a student at TripleTen.
+            This project brings together stock insights and financial news in one
+            place. Search for real-time stock data, explore recent articles, and save
+            the stories or tickers you want to revisit.
           </p>
           <p className="about__description">
-            I had a great experience with TripleTen building websites and learning multiple programming languages, I would recommend it to anyone who wants to learn how to code.
+            My name is Hadi Frifer and I am a student at TripleTen. I built this app
+            to make it simple to track market updates, compare sources, and build a
+            personalized watchlist.
           </p>
         </div>
       </div>
